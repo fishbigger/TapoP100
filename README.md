@@ -29,6 +29,8 @@ p100.getDeviceInfo() #Returns dict with all the device info
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
+## Contributers
+[K4CZP3R] https://github.com/K4CZP3R
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
