@@ -159,14 +159,13 @@ class P100():
 			raise Exception(f"Error Code: {errorCode}, {errorMessage}")
 
 	def turnOn(self):
-		URL = f"http://192.168.0.157/app?token={self.token}"
+		URL = f"http://{self.ipAddress}/app?token={self.token}"
 		Payload = {
 			"method": "set_device_info",
 			"params":{
 				"device_on": True
 			},
 			"requestTimeMils": int(round(time.time() * 1000)),
-			"terminalUUID": "1C-3B-F3-A5-71-E5"
 		}
 
 		headers = {
@@ -191,14 +190,13 @@ class P100():
 			errorMessage = self.errorCodes[str(errorCode)]
 
 	def turnOff(self):
-		URL = f"http://192.168.0.157/app?token={self.token}"
+		URL = f"http://{self.ipAddress}/app?token={self.token}"
 		Payload = {
 			"method": "set_device_info",
 			"params":{
 				"device_on": False
 			},
 			"requestTimeMils": int(round(time.time() * 1000)),
-			"terminalUUID": "1C-3B-F3-A5-71-E5"
 		}
 
 		headers = {
@@ -223,7 +221,7 @@ class P100():
 			errorMessage = self.errorCodes[str(errorCode)]
 
 	def getDeviceInfo(self):
-		URL = f"http://192.168.0.157/app?token={self.token}"
+		URL = f"http://{self.ipAddress}/app?token={self.token}"
 		Payload = {
 			"method": "get_device_info",
 			"requestTimeMils": int(round(time.time() * 1000)),
@@ -250,3 +248,17 @@ class P100():
 
 		return decryptedResponse
 
+	def getDeviceName(self):
+		self.handshake()
+		self.login()
+		data = self.getDeviceInfo()
+
+		data = json.loads(data)
+
+		if data["error_code"] != 0:
+			errorCode = ast.literal_eval(decryptedResponse)["error_code"]
+			errorMessage = self.errorCodes[str(errorCode)]
+		else:
+			encodedName = data["result"]["nickname"]
+			name = b64decode(encodedName)
+			return name.decode("utf-8")
