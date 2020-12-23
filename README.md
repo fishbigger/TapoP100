@@ -32,6 +32,7 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 ## Contributers
 [K4CZP3R](https://github.com/K4CZP3R)
+[Sonic74](https://github.com/sonic74)
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
