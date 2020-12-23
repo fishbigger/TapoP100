@@ -31,7 +31,7 @@ p100.getDeviceInfo() #Returns dict with all the device info
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 ## Contributers
-[K4CZP3R](https://github.com/K4CZP3R)
+[K4CZP3R](https://github.com/K4CZP3R)\
 [Sonic74](https://github.com/sonic74)
 
 ## License
