@@ -8,6 +8,7 @@ from Crypto.Cipher import AES, PKCS1_OAEP, PKCS1_v1_5
 from . import tp_link_cipher
 import ast
 import pkgutil
+import logging
 
 #Old Functions to get device list from tplinkcloud
 def getToken(email, password):
@@ -51,6 +52,9 @@ class P100():
 
 		self.encryptCredentials(email, password)
 		self.createKeyPair()
+		self.logger = logging.getLogger("p100")
+		self.logger.info("Email %s", email)
+		self.token = "not logged in yet"
 
 	def encryptCredentials(self, email, password):
 		#Password Encoding
@@ -111,6 +115,7 @@ class P100():
 			}
 		}
 
+		self.logger.info("Posting to %s:%s", URL, Payload)
 		r = requests.post(URL, json=Payload)
 
 		encryptedKey = r.json()["result"]["key"]
@@ -118,7 +123,7 @@ class P100():
 
 		try:
 			self.cookie = r.headers["Set-Cookie"][:-13]
-			
+			self.logger.info(f"Handshake completed; cookie={self.cookie}")
 		except:
 			errorCode = r.json()["error_code"]
 			errorMessage = self.errorCodes[str(errorCode)]
@@ -147,9 +152,11 @@ class P100():
 			}
 		}
 
+		self.logger.info(f"Login request {SecurePassthroughPayload}")
 		r = requests.post(URL, json=SecurePassthroughPayload, headers=headers)
 
 		decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
+		self.logger.info(f"login response {decryptedResponse}")
 
 		try:
 			self.token = ast.literal_eval(decryptedResponse)["result"]["token"]
