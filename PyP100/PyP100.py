@@ -98,7 +98,7 @@ class P100():
 				sb += hex_string
 			else:
 				sb += hex_string
-		
+
 		return sb
 
 	def handshake(self):
@@ -118,7 +118,7 @@ class P100():
 
 		try:
 			self.cookie = r.headers["Set-Cookie"][:-13]
-			
+
 		except:
 			errorCode = r.json()["error_code"]
 			errorMessage = self.errorCodes[str(errorCode)]
@@ -195,6 +195,69 @@ class P100():
 			"method": "set_device_info",
 			"params":{
 				"brightness": brightness
+			},
+			"requestTimeMils": int(round(time.time() * 1000)),
+		}
+
+		headers = {
+			"Cookie": self.cookie
+		}
+
+		EncryptedPayload = self.tpLinkCipher.encrypt(json.dumps(Payload))
+
+		SecurePassthroughPayload = {
+			"method": "securePassthrough",
+			"params":{
+				"request": EncryptedPayload
+			}
+		}
+
+		r = requests.post(URL, json=SecurePassthroughPayload, headers=headers)
+
+		decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
+
+		if ast.literal_eval(decryptedResponse)["error_code"] != 0:
+			errorCode = ast.literal_eval(decryptedResponse)["error_code"]
+			errorMessage = self.errorCodes[str(errorCode)]
+
+	def setColourTemp(self, colourtemp):
+		URL = f"http://{self.ipAddress}/app?token={self.token}"
+		Payload = {
+			"method": "set_device_info",
+			"params":{
+				"color_temp": colourtemp
+			},
+			"requestTimeMils": int(round(time.time() * 1000)),
+		}
+
+		headers = {
+			"Cookie": self.cookie
+		}
+
+		EncryptedPayload = self.tpLinkCipher.encrypt(json.dumps(Payload))
+
+		SecurePassthroughPayload = {
+			"method": "securePassthrough",
+			"params":{
+				"request": EncryptedPayload
+			}
+		}
+
+		r = requests.post(URL, json=SecurePassthroughPayload, headers=headers)
+
+		decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
+
+		if ast.literal_eval(decryptedResponse)["error_code"] != 0:
+			errorCode = ast.literal_eval(decryptedResponse)["error_code"]
+			errorMessage = self.errorCodes[str(errorCode)]
+
+	def setColour(self, hue, saturation):
+		URL = f"http://{self.ipAddress}/app?token={self.token}"
+		Payload = {
+			"method": "set_device_info",
+			"params":{
+				"hue": hue,
+				"saturation": saturation
 			},
 			"requestTimeMils": int(round(time.time() * 1000)),
 		}
