@@ -220,12 +220,12 @@ class P100():
 			errorCode = ast.literal_eval(decryptedResponse)["error_code"]
 			errorMessage = self.errorCodes[str(errorCode)]
 
-	def setColourTemp(self, colourtemp):
+	def setColorTemp(self, colortemp):
 		URL = f"http://{self.ipAddress}/app?token={self.token}"
 		Payload = {
 			"method": "set_device_info",
 			"params":{
-				"color_temp": colourtemp
+				"color_temp": colortemp
 			},
 			"requestTimeMils": int(round(time.time() * 1000)),
 		}
@@ -251,7 +251,7 @@ class P100():
 			errorCode = ast.literal_eval(decryptedResponse)["error_code"]
 			errorMessage = self.errorCodes[str(errorCode)]
 
-	def setColour(self, hue, saturation):
+	def setColor(self, hue, saturation):
 		URL = f"http://{self.ipAddress}/app?token={self.token}"
 		Payload = {
 			"method": "set_device_info",
