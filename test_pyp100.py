@@ -1,9 +1,9 @@
 import os
 
 from PyP100 import PyP100
-import unittest
 import logging
 from logging.config import fileConfig
+import unittest
 
 
 
@@ -20,10 +20,15 @@ TP_EMAIL = "TP_EMAIL"
 TP_PASS = "TP_PASS"
 # IP addr of test device
 TP_DEVICE = "TP_DEVICE"
+# Name of device; used in some tests ok to not set
+TP_DEVICE_NAME = "TP_DEVICE_NAME"
+
 
 tp_email = None
 tp_pass = None
+
 tp_device = None
+tp_device_name = None
 fileConfig('logging-config.ini')
 
 
@@ -46,6 +51,7 @@ class TestPy100(unittest.TestCase):
 		self.tp_email = getvar(TP_EMAIL)
 		self.tp_pass = getvar(TP_PASS)
 		self.tp_device = getvar(TP_DEVICE)
+		self.tp_device_name = getvar(TP_DEVICE_NAME)
 
 	def bind(self):
 		self.initVars()
@@ -56,8 +62,14 @@ class TestPy100(unittest.TestCase):
 		p100.handshake() #Creates the cookies required for further methods
 		return p100
 
+	def testPasswordLengthOK(self):
+		"""Assert password length is good"""
+		self.initVars()
+		self.assertLessEqual(len(self.tp_pass), 8,
+				     "Password string too long for device authentication")
 
 	def testHandshake(self):
+		"""Test basic hanshake"""
 		self.bind()
 
 	def testPower(self):
@@ -66,12 +78,18 @@ class TestPy100(unittest.TestCase):
 		p100.turnOn() #Sends the turn on request
 		p100.setBrightness(100) #Sends the set brightness request
 		p100.turnOff() #Sends the turn off request
-		p100.getDeviceInfo() #Returns dict with all the device info
+		info = p100.getDeviceInfo()
+		self.logger.info("Device %s", info)
 
 	def testInfo(self):
 		p100 = self.bind()
 		devinfo = p100.getDeviceInfo() #Returns dict with all the device info
 		print(devinfo)
+
+	def testDeviceList(self):
+		p100 = self.bind()
+		devices = p100.listDevices()
+		print(devices)
 
 
 

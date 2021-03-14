@@ -38,7 +38,8 @@ ERROR_CODES = {
 	"-1010": "Invalid Public Key Length",
 	"-1501": "Invalid Request or Credentials",
 	"1002": "Incorrect Request",
-	"-1003": "JSON formatting error "
+	"-1003": "JSON formatting error",
+	"-1009": "GET not supported?"
 }
 
 class P100():
@@ -126,7 +127,7 @@ class P100():
 			self.logger.info(f"Handshake completed; cookie={self.cookie}")
 		except:
 			errorCode = r.json()["error_code"]
-			errorMessage = self.errorCodes[str(errorCode)]
+			errorMessage = self.lookupErrorCode[str(errorCode)]
 			raise Exception(f"Error Code: {errorCode}, {errorMessage}")
 
 	def login(self):
@@ -162,7 +163,7 @@ class P100():
 			self.token = ast.literal_eval(decryptedResponse)["result"]["token"]
 		except:
 			errorCode = ast.literal_eval(decryptedResponse)["error_code"]
-			errorMessage = self.errorCodes[str(errorCode)]
+			errorMessage = self.lookupErrorCode[str(errorCode)]
 			raise Exception(f"Error Code: {errorCode}, {errorMessage}")
 
 	def turnOn(self):
@@ -194,7 +195,8 @@ class P100():
 
 		if ast.literal_eval(decryptedResponse)["error_code"] != 0:
 			errorCode = ast.literal_eval(decryptedResponse)["error_code"]
-			errorMessage = self.errorCodes[str(errorCode)]
+			raise self.error("turnOn", str(errorCode))
+
 
 	def setBrightness(self, brightness):
 		URL = f"http://{self.ipAddress}/app?token={self.token}"
@@ -225,7 +227,7 @@ class P100():
 
 		if ast.literal_eval(decryptedResponse)["error_code"] != 0:
 			errorCode = ast.literal_eval(decryptedResponse)["error_code"]
-			errorMessage = self.errorCodes[str(errorCode)]
+			raise self.error("setBrightness", str(errorCode))
 
 	def turnOff(self):
 		URL = f"http://{self.ipAddress}/app?token={self.token}"
@@ -256,7 +258,7 @@ class P100():
 
 		if ast.literal_eval(decryptedResponse)["error_code"] != 0:
 			errorCode = ast.literal_eval(decryptedResponse)["error_code"]
-			errorMessage = self.errorCodes[str(errorCode)]
+			raise self.error("turnOff", str(errorCode))
 
 	def getDeviceInfo(self):
 		URL = f"http://{self.ipAddress}/app?token={self.token}"
@@ -294,9 +296,29 @@ class P100():
 		data = json.loads(data)
 
 		if data["error_code"] != 0:
-			errorCode = ast.literal_eval(decryptedResponse)["error_code"]
-			errorMessage = self.errorCodes[str(errorCode)]
+			errorCode = ast.literal_eval(data)["error_code"]
+			raise self.error("get_device_info", str(errorCode))
 		else:
 			encodedName = data["result"]["nickname"]
 			name = b64decode(encodedName)
 			return name.decode("utf-8")
+
+	def listDevices(self):
+		return getDeviceList(self.email, self.password)
+
+	def error(self, action: str, errorCode: str) -> Exception:
+		"""report an error: log it and save the self. fields"""
+		sec = str(errorCode)
+		self.lastErrorCode = sec
+		errorMessage = self.lookupErrorCode(sec)
+		self.lastErrorMessage = errorMessage
+		self.logger.warning("Error %s: %s: %s", action, sec, errorMessage)
+		return Exception(f"Error Code: {errorCode}, {errorMessage}")
+
+	def lookupErrorCode(self, errorCode: str) -> str:
+		""" Look up an error code, fall back to the number if the code is unknown """
+		s = self.errorCodes[errorCode]
+		if s is None:
+			return "Error " + errorCode
+		else:
+			return s
