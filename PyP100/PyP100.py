@@ -14,13 +14,13 @@ import uuid
 def getToken(email, password):
 	URL = "https://eu-wap.tplinkcloud.com"
 	Payload = {
-	 "method": "login",
-	 "params": {
-	 "appType": "Tapo_Ios",
-	 "cloudUserName": email,
-	 "cloudPassword": password,
-	 "terminalUUID": "0A950402-7224-46EB-A450-7362CDB902A2"
-	 }
+		"method": "login",
+		"params": {
+			"appType": "Tapo_Ios",
+			"cloudUserName": email,
+			"cloudPassword": password,
+			"terminalUUID": "0A950402-7224-46EB-A450-7362CDB902A2"
+		}
 	}
 
 	return requests.post(URL, json=Payload).json()['result']['token']
@@ -28,7 +28,7 @@ def getToken(email, password):
 def getDeviceList(email, password):
 	URL = "https://eu-wap.tplinkcloud.com?token=" + getToken(email, password)
 	Payload = {
-	 "method": "getDeviceList",
+		"method": "getDeviceList",
 	}
 
 	return requests.post(URL, json=Payload).json()
@@ -178,10 +178,7 @@ class P100():
 
 		EncryptedPayload = self.tpLinkCipher.encrypt(json.dumps(Payload))
 
-		SecurePassthroughPayload = {
-			"method": "securePassthrough",
-			"params":{
-				"request": EncryptedPayload
+		SecurePassthroughPayload = { "method": "securePassthrough", "params":{ "request": EncryptedPayload
 			}
 		}
 
@@ -280,9 +277,6 @@ class P100():
 		}
 
 		r = requests.post(URL, json=SecurePassthroughPayload, headers=headers)
-
-
-
 		decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
 
 		return decryptedResponse
