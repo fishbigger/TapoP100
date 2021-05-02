@@ -178,7 +178,10 @@ class P100():
 
 		EncryptedPayload = self.tpLinkCipher.encrypt(json.dumps(Payload))
 
-		SecurePassthroughPayload = { "method": "securePassthrough", "params":{ "request": EncryptedPayload
+		SecurePassthroughPayload = {
+			"method": "securePassthrough",
+			"params": {
+				"request": EncryptedPayload
 			}
 		}
 
