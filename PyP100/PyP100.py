@@ -8,18 +8,19 @@ from Crypto.Cipher import AES, PKCS1_OAEP, PKCS1_v1_5
 from . import tp_link_cipher
 import ast
 import pkgutil
+import uuid
 
 #Old Functions to get device list from tplinkcloud
 def getToken(email, password):
 	URL = "https://eu-wap.tplinkcloud.com"
 	Payload = {
-	 "method": "login",
-	 "params": {
-	 "appType": "Tapo_Ios",
-	 "cloudUserName": email,
-	 "cloudPassword": password,
-	 "terminalUUID": "0A950402-7224-46EB-A450-7362CDB902A2"
-	 }
+		"method": "login",
+		"params": {
+			"appType": "Tapo_Ios",
+			"cloudUserName": email,
+			"cloudPassword": password,
+			"terminalUUID": "0A950402-7224-46EB-A450-7362CDB902A2"
+		}
 	}
 
 	return requests.post(URL, json=Payload).json()['result']['token']
@@ -27,7 +28,7 @@ def getToken(email, password):
 def getDeviceList(email, password):
 	URL = "https://eu-wap.tplinkcloud.com?token=" + getToken(email, password)
 	Payload = {
-	 "method": "getDeviceList",
+		"method": "getDeviceList",
 	}
 
 	return requests.post(URL, json=Payload).json()
@@ -35,6 +36,7 @@ def getDeviceList(email, password):
 ERROR_CODES = {
 	"0": "Success",
 	"-1010": "Invalid Public Key Length",
+	"-1012": "Invalid terminalUUID",
 	"-1501": "Invalid Request or Credentials",
 	"1002": "Incorrect Request",
 	"-1003": "JSON formatting error "
@@ -43,6 +45,7 @@ ERROR_CODES = {
 class P100():
 	def __init__ (self, ipAddress, email, password):
 		self.ipAddress = ipAddress
+		self.terminalUUID = str(uuid.uuid4())
 
 		self.email = email
 		self.password = password
@@ -98,7 +101,7 @@ class P100():
 				sb += hex_string
 			else:
 				sb += hex_string
-		
+
 		return sb
 
 	def handshake(self):
@@ -118,7 +121,7 @@ class P100():
 
 		try:
 			self.cookie = r.headers["Set-Cookie"][:-13]
-			
+
 		except:
 			errorCode = r.json()["error_code"]
 			errorMessage = self.errorCodes[str(errorCode)]
@@ -166,6 +169,7 @@ class P100():
 				"device_on": True
 			},
 			"requestTimeMils": int(round(time.time() * 1000)),
+			"terminalUUID": self.terminalUUID
 		}
 
 		headers = {
@@ -176,7 +180,7 @@ class P100():
 
 		SecurePassthroughPayload = {
 			"method": "securePassthrough",
-			"params":{
+			"params": {
 				"request": EncryptedPayload
 			}
 		}
@@ -188,6 +192,7 @@ class P100():
 		if ast.literal_eval(decryptedResponse)["error_code"] != 0:
 			errorCode = ast.literal_eval(decryptedResponse)["error_code"]
 			errorMessage = self.errorCodes[str(errorCode)]
+			raise Exception(f"Error Code: {errorCode}, {errorMessage}")
 
 	def setBrightness(self, brightness):
 		URL = f"http://{self.ipAddress}/app?token={self.token}"
@@ -219,6 +224,7 @@ class P100():
 		if ast.literal_eval(decryptedResponse)["error_code"] != 0:
 			errorCode = ast.literal_eval(decryptedResponse)["error_code"]
 			errorMessage = self.errorCodes[str(errorCode)]
+			raise Exception(f"Error Code: {errorCode}, {errorMessage}")
 
 	def turnOff(self):
 		URL = f"http://{self.ipAddress}/app?token={self.token}"
@@ -228,6 +234,7 @@ class P100():
 				"device_on": False
 			},
 			"requestTimeMils": int(round(time.time() * 1000)),
+			"terminalUUID": self.terminalUUID
 		}
 
 		headers = {
@@ -250,6 +257,7 @@ class P100():
 		if ast.literal_eval(decryptedResponse)["error_code"] != 0:
 			errorCode = ast.literal_eval(decryptedResponse)["error_code"]
 			errorMessage = self.errorCodes[str(errorCode)]
+			raise Exception(f"Error Code: {errorCode}, {errorMessage}")
 
 	def getDeviceInfo(self):
 		URL = f"http://{self.ipAddress}/app?token={self.token}"
@@ -272,9 +280,6 @@ class P100():
 		}
 
 		r = requests.post(URL, json=SecurePassthroughPayload, headers=headers)
-
-
-
 		decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
 
 		return decryptedResponse
@@ -289,6 +294,7 @@ class P100():
 		if data["error_code"] != 0:
 			errorCode = ast.literal_eval(decryptedResponse)["error_code"]
 			errorMessage = self.errorCodes[str(errorCode)]
+			raise Exception(f"Error Code: {errorCode}, {errorMessage}")
 		else:
 			encodedName = data["result"]["nickname"]
 			name = b64decode(encodedName)
