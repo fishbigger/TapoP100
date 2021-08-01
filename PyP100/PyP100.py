@@ -9,6 +9,7 @@ from . import tp_link_cipher
 import ast
 import pkgutil
 import uuid
+import json
 
 #Old Functions to get device list from tplinkcloud
 def getToken(email, password):
@@ -282,7 +283,7 @@ class P100():
 		r = requests.post(URL, json=SecurePassthroughPayload, headers=headers)
 		decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
 
-		return decryptedResponse
+		return json.loads(decryptedResponse)
 
 	def getDeviceName(self):
 		self.handshake()
