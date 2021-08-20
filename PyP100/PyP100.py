@@ -24,7 +24,7 @@ def getToken(email, password):
 		}
 	}
 
-	return requests.post(URL, json=Payload).json()['result']['token']
+	return requests.post(URL, json=Payload, timeout=2).json()['result']['token']
 
 def getDeviceList(email, password):
 	URL = "https://eu-wap.tplinkcloud.com?token=" + getToken(email, password)
@@ -32,7 +32,7 @@ def getDeviceList(email, password):
 		"method": "getDeviceList",
 	}
 
-	return requests.post(URL, json=Payload).json()
+	return requests.post(URL, json=Payload, timeout=2).json()
 
 ERROR_CODES = {
 	"0": "Success",
@@ -115,7 +115,7 @@ class P100():
 			}
 		}
 
-		r = requests.post(URL, json=Payload)
+		r = requests.post(URL, json=Payload, timeout=2)
 
 		encryptedKey = r.json()["result"]["key"]
 		self.tpLinkCipher = self.decode_handshake_key(encryptedKey)
@@ -186,7 +186,7 @@ class P100():
 			}
 		}
 
-		r = requests.post(URL, json=SecurePassthroughPayload, headers=headers)
+		r = requests.post(URL, json=SecurePassthroughPayload, headers=headers, timeout=2)
 
 		decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
 
@@ -218,7 +218,7 @@ class P100():
 			}
 		}
 
-		r = requests.post(URL, json=SecurePassthroughPayload, headers=headers)
+		r = requests.post(URL, json=SecurePassthroughPayload, headers=headers, timeout=2)
 
 		decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
 
@@ -251,7 +251,7 @@ class P100():
 			}
 		}
 
-		r = requests.post(URL, json=SecurePassthroughPayload, headers=headers)
+		r = requests.post(URL, json=SecurePassthroughPayload, headers=headers, timeout=2)
 
 		decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
 
@@ -280,7 +280,7 @@ class P100():
 			}
 		}
 
-		r = requests.post(URL, json=SecurePassthroughPayload, headers=headers)
+		r = requests.post(URL, json=SecurePassthroughPayload, headers=headers, timeout=2)
 		decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
 
 		return json.loads(decryptedResponse)
