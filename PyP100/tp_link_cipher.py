@@ -22,11 +22,11 @@ class TpLinkCipher:
     def encrypt(self, data):
         data = pkcs7.PKCS7Encoder().encode(data)
         data: str
-        cipher = AES.new(self.key, AES.MODE_CBC, self.iv)
+        cipher = AES.new(bytes(self.key), AES.MODE_CBC, bytes(self.iv))
         encrypted = cipher.encrypt(data.encode("UTF-8"))
         return TpLinkCipher.mime_encoder(encrypted).replace("\r\n","")
 
     def decrypt(self, data: str):
-        aes = AES.new(self.key, AES.MODE_CBC, self.iv)
+        aes = AES.new(bytes(self.key), AES.MODE_CBC, bytes(self.iv))
         pad_text = aes.decrypt(base64.b64decode(data.encode("UTF-8"))).decode("UTF-8")
         return pkcs7.PKCS7Encoder().decode(pad_text)

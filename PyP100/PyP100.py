@@ -68,13 +68,13 @@ class P100():
 		self.keys = RSA.generate(1024)
 
 		self.privateKey = self.keys.exportKey("PEM")
-		self.publicKey  = self.keys.publickey().export_key("PEM")
+		self.publicKey  = self.keys.publickey().exportKey("PEM")
 
 	def decode_handshake_key(self, key):
 		decode: bytes = b64decode(key.encode("UTF-8"))
 		decode2: bytes = self.privateKey
 
-		cipher = PKCS1_v1_5.new(RSA.import_key(decode2))
+		cipher = PKCS1_v1_5.new(RSA.importKey(decode2))
 		do_final = cipher.decrypt(decode, None)
 		if do_final is None:
 			raise ValueError("Decryption failed!")
