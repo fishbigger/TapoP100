@@ -8,3 +8,6 @@ V0.0.7 - Fixed Incorrect Mac and ip address\
 V0.0.8 - Fixed dot in __init__.py\
 V0.0.9 - Added get name function\
 V0.0.10 - Added L510E brightness function\
+V0.0.11 - Fixed HISTORY.md file not found\
+V0.0.12 - \
+V0.0.13 - Fix RSA export_key issue\
