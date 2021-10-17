@@ -261,6 +261,38 @@ class P100():
 			errorMessage = self.errorCodes[str(errorCode)]
 			raise Exception(f"Error Code: {errorCode}, {errorMessage}")
 
+	def setColorTemp(self, color_temp):
+		URL = f"http://{self.ipAddress}/app?token={self.token}"
+		Payload = {
+			"method": "set_device_info",
+			"params":{
+				"color_temp": color_temp,
+			},
+			"requestTimeMils": int(round(time.time() * 1000)),
+		}
+
+		headers = {
+			"Cookie": self.cookie
+		}
+
+		EncryptedPayload = self.tpLinkCipher.encrypt(json.dumps(Payload))
+
+		SecurePassthroughPayload = {
+			"method": "securePassthrough",
+			"params":{
+				"request": EncryptedPayload
+			}
+		}
+
+		r = requests.post(URL, json=SecurePassthroughPayload, headers=headers)
+
+		decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
+
+		if ast.literal_eval(decryptedResponse)["error_code"] != 0:
+			errorCode = ast.literal_eval(decryptedResponse)["error_code"]
+			errorMessage = self.errorCodes[str(errorCode)]
+			raise Exception(f"Error Code: {errorCode}, {errorMessage}")
+
 	def turnOff(self):
 		URL = f"http://{self.ipAddress}/app?token={self.token}"
 		Payload = {
