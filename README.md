@@ -3,11 +3,7 @@ Tapo P100 is a Python library for controlling the Tp-link Tapo P100 plugs, P105 
 
 ## Installation
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install PyP100.
-
-```bash
-pip3 install PyP100
-```
+coming soon...
 
 ## Usage
 
@@ -31,8 +27,6 @@ p100.getDeviceInfo() #Returns dict with all the device info
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 ## Contributers
-[K4CZP3R](https://github.com/K4CZP3R)\
-[Sonic74](https://github.com/sonic74)
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
