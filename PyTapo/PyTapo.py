@@ -43,7 +43,7 @@ ERROR_CODES = {
 	"-1003": "JSON formatting error "
 }
 
-class P100():
+class Tapo():
 	def __init__ (self, ipAddress, email, password):
 		self.ipAddress = ipAddress
 		self.terminalUUID = str(uuid.uuid4())
@@ -300,3 +300,71 @@ class P100():
 			encodedName = data["result"]["nickname"]
 			name = b64decode(encodedName)
 			return name.decode("utf-8")
+
+	
+	def setColor(self, hue, saturation, brightness):
+		URL = f"http://{self.ipAddress}/app?token={self.token}"
+		Payload = {
+			"method": "set_device_info",
+			"params":{
+				"hue": hue,
+				"saturation": saturation,
+				"brightness": brightness
+			},
+			"requestTimeMils": int(round(time.time() * 1000)),
+		}
+
+		headers = {
+			"Cookie": self.cookie
+		}
+
+		EncryptedPayload = self.tpLinkCipher.encrypt(json.dumps(Payload))
+
+		SecurePassthroughPayload = {
+			"method": "securePassthrough",
+			"params":{
+				"request": EncryptedPayload
+			}
+		}
+
+		r = requests.post(URL, json=SecurePassthroughPayload, headers=headers)
+
+		decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
+
+		if ast.literal_eval(decryptedResponse)["error_code"] != 0:
+			errorCode = ast.literal_eval(decryptedResponse)["error_code"]
+			errorMessage = self.errorCodes[str(errorCode)]
+			raise Exception(f"Error Code: {errorCode}, {errorMessage}")
+
+
+	def setColorTemp(self, temp_in_kelvin):
+			URL = f"http://{self.ipAddress}/app?token={self.token}"
+			Payload = {
+				"method": "set_device_info",
+				"params":{
+					"color_temp": temp_in_kelvin,
+				},
+				"requestTimeMils": int(round(time.time() * 1000)),
+			}
+
+			headers = {
+				"Cookie": self.cookie
+			}
+
+			EncryptedPayload = self.tpLinkCipher.encrypt(json.dumps(Payload))
+
+			SecurePassthroughPayload = {
+				"method": "securePassthrough",
+				"params":{
+					"request": EncryptedPayload
+				}
+			}
+
+			r = requests.post(URL, json=SecurePassthroughPayload, headers=headers)
+
+			decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
+
+			if ast.literal_eval(decryptedResponse)["error_code"] != 0:
+				errorCode = ast.literal_eval(decryptedResponse)["error_code"]
+				errorMessage = self.errorCodes[str(errorCode)]
+				raise Exception(f"Error Code: {errorCode}, {errorMessage}")
