@@ -29,7 +29,7 @@ class P110(PyP100.P100):
             }
         }
         _LOGGER.debug("getEnergyUsage %s", self.ipAddress)
-        r = requests.post(URL, json=SecurePassthroughPayload, headers=headers)
+        r = requests.post(URL, json=SecurePassthroughPayload, headers=headers, timeout=2)
 
         decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
 
