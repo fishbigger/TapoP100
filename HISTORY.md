@@ -12,3 +12,4 @@ V0.0.11 - Fixed HISTORY.md file not found\
 V0.0.12 - \
 V0.0.13 - Fix RSA export_key issue\
 V0.0.14 - Add P110 Energy Monitoring\
+V0.0.15 - Add L530 colour change and white colour\
