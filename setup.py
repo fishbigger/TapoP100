@@ -9,7 +9,7 @@ with open('HISTORY.md') as history_file:
 setup_args = dict(
     name='PyP100',
     version='0.0.15',
-    description='A module for controlling the TP-Link Tapo P100 Plugs, P105 Plugs and L1510 Bulbs.',
+    description='A module for controlling the Tp-link Tapo P100/P105/P110 plugs and L530/L510E bulbs.',
     long_description_content_type="text/markdown",
     long_description=README,
     license='MIT',

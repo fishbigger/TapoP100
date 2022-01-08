@@ -1,5 +1,5 @@
 # Tapo P100
-Tapo P100 is a Python library for controlling the Tp-link Tapo P100/P105/P110 plugs and L510E bulbs.
+Tapo P100 is a Python library for controlling the Tp-link Tapo P100/P105/P110 plugs and L530/L510E bulbs.
 
 ## Installation
 
@@ -56,7 +56,12 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 ## Contributers
 [K4CZP3R](https://github.com/K4CZP3R)\
-[Sonic74](https://github.com/sonic74)
+[Sonic74](https://github.com/sonic74)\
+[shadow00](https://github.com/shadow00)\
+[mochipon](https://github.com/mochipon)\
+[realzoulou](https://github.com/realzoulou)\
+[arrival-spring](https://github.com/arrival-spring)
+[wlp7s0](https://github.com/wlp7s0)
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
