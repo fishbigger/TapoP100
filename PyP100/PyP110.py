@@ -33,4 +33,4 @@ class P110(PyP100.P100):
 
         decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
 
-        return decryptedResponse
+        return json.loads(decryptedResponse)
