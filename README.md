@@ -25,7 +25,7 @@ p100.getDeviceInfo() #Returns dict with all the device info
 ```
 Bulbs - L510E, L530 etc.
 ```python
-from PyP100 import PyP100
+from PyP100 import PyL530
 
 l530 = PyL530.L530("192.168.X.X", "email@gmail.com", "Password123") #Creating a L530 bulb object
 
