@@ -266,3 +266,77 @@ class P100():
 			encodedName = data["result"]["nickname"]
 			name = b64decode(encodedName)
 			return name.decode("utf-8")
+
+	def turnOnWithDelay(self, delay):
+		URL = f"http://{self.ipAddress}/app?token={self.token}"
+		Payload = {
+			"method": "add_countdown_rule",
+			"params": {
+				"delay": int(delay),
+				"desired_states": {
+					"on": True
+				},
+				"enable": True,
+				"remain": int(delay)
+			},
+			"terminalUUID": self.terminalUUID
+		}
+
+		headers = {
+			"Cookie": self.cookie
+		}
+
+		EncryptedPayload = self.tpLinkCipher.encrypt(json.dumps(Payload))
+
+		SecurePassthroughPayload = {
+			"method": "securePassthrough",
+			"params": {
+				"request": EncryptedPayload
+			}
+		}
+
+		r = requests.post(URL, json=SecurePassthroughPayload, headers=headers)
+
+		decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
+
+		if ast.literal_eval(decryptedResponse)["error_code"] != 0:
+			errorCode = ast.literal_eval(decryptedResponse)["error_code"]
+			errorMessage = self.errorCodes[str(errorCode)]
+			raise Exception(f"Error Code: {errorCode}, {errorMessage}")
+
+	def turnOffWithDelay(self, delay):
+		URL = f"http://{self.ipAddress}/app?token={self.token}"
+		Payload = {
+			"method": "add_countdown_rule",
+			"params": {
+				"delay": int(delay),
+				"desired_states": {
+					"on": False
+				},
+				"enable": True,
+				"remain": int(delay)
+			},
+			"terminalUUID": self.terminalUUID
+		}
+
+		headers = {
+			"Cookie": self.cookie
+		}
+
+		EncryptedPayload = self.tpLinkCipher.encrypt(json.dumps(Payload))
+
+		SecurePassthroughPayload = {
+			"method": "securePassthrough",
+			"params": {
+				"request": EncryptedPayload
+			}
+		}
+
+		r = requests.post(URL, json=SecurePassthroughPayload, headers=headers)
+
+		decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
+
+		if ast.literal_eval(decryptedResponse)["error_code"] != 0:
+			errorCode = ast.literal_eval(decryptedResponse)["error_code"]
+			errorMessage = self.errorCodes[str(errorCode)]
+			raise Exception(f"Error Code: {errorCode}, {errorMessage}")
