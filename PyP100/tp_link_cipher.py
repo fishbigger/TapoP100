@@ -1,6 +1,4 @@
-from Crypto import Random
 from Crypto.Cipher import AES
-import hashlib
 import pkcs7
 import base64
 
@@ -10,6 +8,7 @@ class TpLinkCipher:
         self.iv = b_arr2
         self.key = b_arr
 
+    @staticmethod
     def mime_encoder(to_encode: bytes):
         encoded_list = list(base64.b64encode(to_encode).decode("UTF-8"))
 
