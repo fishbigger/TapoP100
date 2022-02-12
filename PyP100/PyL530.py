@@ -4,9 +4,7 @@ import json
 import logging
 import time
 import ast
-from requests import Session
 
-session = Session()
 _LOGGER = logging.getLogger(__name__)
 
 class L530(PyP100.P100):
@@ -33,7 +31,7 @@ class L530(PyP100.P100):
 			}
 		}
 
-        r = session.post(URL, json=SecurePassthroughPayload, headers=headers, timeout=2)
+        r = self.session.post(URL, json=SecurePassthroughPayload, headers=headers, timeout=2)
 
         decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
 
@@ -65,7 +63,7 @@ class L530(PyP100.P100):
         	}
         }
 
-        r = session.post(URL, json=SecurePassthroughPayload, headers=headers, timeout=2)
+        r = self.session.post(URL, json=SecurePassthroughPayload, headers=headers, timeout=2)
 
         decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
 
@@ -97,7 +95,7 @@ class L530(PyP100.P100):
         	}
         }
 
-        r = session.post(URL, json=SecurePassthroughPayload, headers=headers, timeout=2)
+        r = self.session.post(URL, json=SecurePassthroughPayload, headers=headers, timeout=2)
 
         decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
 

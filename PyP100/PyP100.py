@@ -1,4 +1,6 @@
 import requests
+from requests import Session
+
 from base64 import b64encode, b64decode
 import hashlib
 from Crypto.PublicKey import RSA
@@ -10,6 +12,7 @@ import ast
 import pkgutil
 import uuid
 import json
+
 
 #Old Functions to get device list from tplinkcloud
 def getToken(email, password):
@@ -50,6 +53,7 @@ class P100():
 
 		self.email = email
 		self.password = password
+		self.session = Session()
 
 		self.errorCodes = ERROR_CODES
 
@@ -115,7 +119,7 @@ class P100():
 			}
 		}
 
-		r = requests.post(URL, json=Payload, timeout=2)
+		r = self.session.post(URL, json=Payload, timeout=2)
 
 		encryptedKey = r.json()["result"]["key"]
 		self.tpLinkCipher = self.decode_handshake_key(encryptedKey)
@@ -151,7 +155,7 @@ class P100():
 			}
 		}
 
-		r = requests.post(URL, json=SecurePassthroughPayload, headers=headers, timeout=2)
+		r = self.session.post(URL, json=SecurePassthroughPayload, headers=headers, timeout=2)
 
 		decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
 
@@ -186,7 +190,7 @@ class P100():
 			}
 		}
 
-		r = requests.post(URL, json=SecurePassthroughPayload, headers=headers, timeout=2)
+		r = self.session.post(URL, json=SecurePassthroughPayload, headers=headers, timeout=2)
 
 		decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
 
@@ -219,7 +223,7 @@ class P100():
 			}
 		}
 
-		r = requests.post(URL, json=SecurePassthroughPayload, headers=headers, timeout=2)
+		r = self.session.post(URL, json=SecurePassthroughPayload, headers=headers, timeout=2)
 
 		decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
 
@@ -248,7 +252,7 @@ class P100():
 			}
 		}
 
-		r = requests.post(URL, json=SecurePassthroughPayload, headers=headers)
+		r = self.session.post(URL, json=SecurePassthroughPayload, headers=headers)
 		decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
 
 		return json.loads(decryptedResponse)
@@ -295,7 +299,7 @@ class P100():
 			}
 		}
 
-		r = requests.post(URL, json=SecurePassthroughPayload, headers=headers)
+		r = self.session.post(URL, json=SecurePassthroughPayload, headers=headers)
 
 		decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
 
@@ -332,7 +336,7 @@ class P100():
 			}
 		}
 
-		r = requests.post(URL, json=SecurePassthroughPayload, headers=headers)
+		r = self.session.post(URL, json=SecurePassthroughPayload, headers=headers)
 
 		decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
 
