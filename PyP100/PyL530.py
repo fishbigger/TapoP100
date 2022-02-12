@@ -2,7 +2,6 @@ from PyP100 import PyP100
 
 import json
 import logging
-import requests
 import time
 import ast
 
@@ -32,7 +31,7 @@ class L530(PyP100.P100):
 			}
 		}
 
-        r = requests.post(URL, json=SecurePassthroughPayload, headers=headers, timeout=2)
+        r = self.session.post(URL, json=SecurePassthroughPayload, headers=headers, timeout=2)
 
         decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
 
@@ -64,7 +63,7 @@ class L530(PyP100.P100):
         	}
         }
 
-        r = requests.post(URL, json=SecurePassthroughPayload, headers=headers, timeout=2)
+        r = self.session.post(URL, json=SecurePassthroughPayload, headers=headers, timeout=2)
 
         decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
 
@@ -96,7 +95,7 @@ class L530(PyP100.P100):
         	}
         }
 
-        r = requests.post(URL, json=SecurePassthroughPayload, headers=headers, timeout=2)
+        r = self.session.post(URL, json=SecurePassthroughPayload, headers=headers, timeout=2)
 
         decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
 

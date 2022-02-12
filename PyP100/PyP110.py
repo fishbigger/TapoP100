@@ -2,7 +2,6 @@ from PyP100 import PyP100
 
 import json
 import logging
-import requests
 import time
 
 _LOGGER = logging.getLogger(__name__)
@@ -29,7 +28,7 @@ class P110(PyP100.P100):
             }
         }
         _LOGGER.debug("getEnergyUsage %s", self.ipAddress)
-        r = requests.post(URL, json=SecurePassthroughPayload, headers=headers, timeout=2)
+        r = self.session.post(URL, json=SecurePassthroughPayload, headers=headers, timeout=2)
 
         decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
 
