@@ -15,3 +15,5 @@ V0.0.14 - Add P110 Energy Monitoring\
 V0.0.15 - Add L530 colour change and white colour\
 V0.0.16 - Add timeout for all requests\
 V0.0.17 - Both getDeviceInfo and getEnergyUsage now return a json dict \
+V0.0.18 - Added 'import ast' to bulb file \
+V0.0.19 - Bumped up dependencies \
