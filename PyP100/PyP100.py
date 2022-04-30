@@ -53,7 +53,7 @@ class P100():
 
 		self.email = email
 		self.password = password
-		self.session = Session()
+		self.session = None
 
 		self.errorCodes = ERROR_CODES
 
@@ -118,7 +118,10 @@ class P100():
 				"requestTimeMils": int(round(time.time() * 1000))
 			}
 		}
-
+		# start new TCP session
+		if self.session:
+			self.session.close()
+		self.session = Session()
 		r = self.session.post(URL, json=Payload, timeout=2)
 
 		encryptedKey = r.json()["result"]["key"]
@@ -258,8 +261,6 @@ class P100():
 		return json.loads(decryptedResponse)
 
 	def getDeviceName(self):
-		self.handshake()
-		self.login()
 		data = self.getDeviceInfo()
 
 		if data["error_code"] != 0:
