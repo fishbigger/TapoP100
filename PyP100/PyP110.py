@@ -9,6 +9,7 @@ _LOGGER = logging.getLogger(__name__)
 class P110(PyP100.P100):
 
     def getEnergyUsage(self):
+        self.check_session()
         URL = f"http://{self.ipAddress}/app?token={self.token}"
         Payload = {
             "method": "get_energy_usage",

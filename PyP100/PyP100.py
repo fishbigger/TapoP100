@@ -1,7 +1,7 @@
 import requests
 from requests import Session
 
-from base64 import b64encode, b64decode
+from base64 import b64decode
 import hashlib
 from Crypto.PublicKey import RSA
 import time
@@ -9,7 +9,6 @@ import json
 from Crypto.Cipher import AES, PKCS1_OAEP, PKCS1_v1_5
 from . import tp_link_cipher
 import ast
-import pkgutil
 import uuid
 import json
 
@@ -59,6 +58,8 @@ class P100():
 
 		self.encryptCredentials(email, password)
 		self.createKeyPair()
+		self.is_handshake = False
+		self.is_login = False
 
 	def encryptCredentials(self, email, password):
 		#Password Encoding
@@ -109,6 +110,11 @@ class P100():
 
 		return sb
 
+	def check_session(self):
+		if self.is_handshake is False:
+			self.handshake()
+		if self.is_login is False:
+			self.login()    	
 	def handshake(self):
 		URL = f"http://{self.ipAddress}/app"
 		Payload = {
@@ -126,8 +132,10 @@ class P100():
 
 		try:
 			self.cookie = r.headers["Set-Cookie"][:-13]
+			self.is_handshake = True
 
 		except:
+			self.is_handshake = False
 			errorCode = r.json()["error_code"]
 			errorMessage = self.errorCodes[str(errorCode)]
 			raise Exception(f"Error Code: {errorCode}, {errorMessage}")
@@ -161,7 +169,9 @@ class P100():
 
 		try:
 			self.token = ast.literal_eval(decryptedResponse)["result"]["token"]
+			self.is_login = True
 		except:
+			self.is_login = False
 			errorCode = ast.literal_eval(decryptedResponse)["error_code"]
 			errorMessage = self.errorCodes[str(errorCode)]
 			raise Exception(f"Error Code: {errorCode}, {errorMessage}")
@@ -233,6 +243,7 @@ class P100():
 			raise Exception(f"Error Code: {errorCode}, {errorMessage}")
 
 	def getDeviceInfo(self):
+		self.check_session()
 		URL = f"http://{self.ipAddress}/app?token={self.token}"
 		Payload = {
 			"method": "get_device_info",
@@ -258,8 +269,7 @@ class P100():
 		return json.loads(decryptedResponse)
 
 	def getDeviceName(self):
-		self.handshake()
-		self.login()
+		self.check_session()
 		data = self.getDeviceInfo()
 
 		if data["error_code"] != 0:
@@ -272,6 +282,7 @@ class P100():
 			return name.decode("utf-8")
 
 	def turnOnWithDelay(self, delay):
+		self.check_session()
 		URL = f"http://{self.ipAddress}/app?token={self.token}"
 		Payload = {
 			"method": "add_countdown_rule",
@@ -309,6 +320,7 @@ class P100():
 			raise Exception(f"Error Code: {errorCode}, {errorMessage}")
 
 	def turnOffWithDelay(self, delay):
+		self.check_session()
 		URL = f"http://{self.ipAddress}/app?token={self.token}"
 		Payload = {
 			"method": "add_countdown_rule",
