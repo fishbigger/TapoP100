@@ -271,6 +271,13 @@ class P100():
 			name = b64decode(encodedName)
 			return name.decode("utf-8")
 
+	def toggleState(self):
+		state = self.getDeviceInfo()["result"]["device_on"]
+		if state:
+			self.turnOff()
+		else:
+			self.turnOn()
+
 	def turnOnWithDelay(self, delay):
 		URL = f"http://{self.ipAddress}/app?token={self.token}"
 		Payload = {
