@@ -344,3 +344,29 @@ class P100():
 			errorCode = ast.literal_eval(decryptedResponse)["error_code"]
 			errorMessage = self.errorCodes[str(errorCode)]
 			raise Exception(f"Error Code: {errorCode}, {errorMessage}")
+
+	def getDeviceUsage(self):
+		URL = f"http://{self.ipAddress}/app?token={self.token}"
+		Payload = {
+			"method": "get_device_usage",
+			"params": {},
+			"requestTimeMils": int(round(time.time() * 1000)),
+		}
+
+		headers = {
+			"Cookie": self.cookie
+		}
+
+		EncryptedPayload = self.tpLinkCipher.encrypt(json.dumps(Payload))
+
+		SecurePassthroughPayload = {
+			"method": "securePassthrough",
+			"params":{
+				"request": EncryptedPayload
+			}
+		}
+
+		r = self.session.post(URL, json=SecurePassthroughPayload, headers=headers)
+		decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
+
+		return json.loads(decryptedResponse)
