@@ -125,7 +125,7 @@ class P100():
 		self.tpLinkCipher = self.decode_handshake_key(encryptedKey)
 
 		try:
-			self.cookie = r.headers["Set-Cookie"][:-13]
+			self.cookie = r.headers["Set-Cookie"].split(";")[0]
 
 		except:
 			errorCode = r.json()["error_code"]
