@@ -54,6 +54,7 @@ class P100():
 		self.email = email
 		self.password = password
 		self.session = Session()
+		self.cookie_name = "TP_SESSIONID"
 
 		self.errorCodes = ERROR_CODES
 
@@ -125,7 +126,7 @@ class P100():
 		self.tpLinkCipher = self.decode_handshake_key(encryptedKey)
 
 		try:
-			self.cookie = r.headers["Set-Cookie"].split(";")[0]
+			self.cookie = f"{self.cookie_name}={r.cookies[self.cookie_name]}"
 
 		except:
 			errorCode = r.json()["error_code"]
