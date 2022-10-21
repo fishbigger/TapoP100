@@ -44,9 +44,9 @@ class L530(PyP100.P100):
     def setColorTemp(self, colortemp):
         URL = f"http://{self.ipAddress}/app?token={self.token}"
         Payload = {
-       		"device_on": True,
         	"method": "set_device_info",
         	"params":{
+        		"device_on": True,
         		"color_temp": colortemp
         	},
         	"requestTimeMils": int(round(time.time() * 1000)),
