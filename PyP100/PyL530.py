@@ -72,11 +72,11 @@ class L530(PyP100.P100):
         	errorMessage = self.errorCodes[str(errorCode)]
 
     def setColor(self, hue, saturation):
+        self.setColorTemp(0)
         URL = f"http://{self.ipAddress}/app?token={self.token}"
         Payload = {
         	"method": "set_device_info",
         	"params":{
-        		"color_temp": 0,
         		"hue": hue,
         		"saturation": saturation
         	},
