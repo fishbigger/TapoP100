@@ -18,3 +18,4 @@ V0.0.17 - Both getDeviceInfo and getEnergyUsage now return a json dict \
 V0.0.18 - Added 'import ast' to bulb file \
 V0.0.19 - Bumped up dependencies \
 V0.0.20 - Set device status to 'on' when setting color, color temp or brightness \
+V0.0.21 - Set color temperature to 0 before adjusting color \
