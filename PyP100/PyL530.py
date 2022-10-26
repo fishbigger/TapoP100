@@ -75,6 +75,8 @@ class L530(PyP100.P100):
 
     def setColor(self, hue, saturation):
         self.turnOn()
+        self.setColorTemp(0)
+
         URL = f"http://{self.ipAddress}/app?token={self.token}"
         Payload = {
         	"method": "set_device_info",
