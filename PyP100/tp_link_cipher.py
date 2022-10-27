@@ -13,7 +13,8 @@ class TpLinkCipher:
         data: str
         cipher = AES.new(bytes(self.key), AES.MODE_CBC, bytes(self.iv))
         encrypted = cipher.encrypt(data.encode("UTF-8"))
-        return TpLinkCipher.mime_encoder(encrypted).replace("\r\n","")
+
+        return base64.b64encode(encrypted).decode("UTF-8").replace("\r\n","")
 
     def decrypt(self, data: str):
         aes = AES.new(bytes(self.key), AES.MODE_CBC, bytes(self.iv))
