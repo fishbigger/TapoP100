@@ -120,6 +120,8 @@ class P100():
 			}
 		}
 
+		self.session = Session()
+
 		r = self.session.post(URL, json=Payload, timeout=2)
 
 		encryptedKey = r.json()["result"]["key"]
