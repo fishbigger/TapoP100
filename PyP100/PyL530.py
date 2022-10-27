@@ -16,7 +16,7 @@ class L530(PyP100.P100):
 			"params":{
 				"brightness": brightness
 			},
-			"requestTimeMils": int(round(time.time() * 1000)),
+			"requestTimeMils": 0,
 		}
 
         headers = {
@@ -49,7 +49,7 @@ class L530(PyP100.P100):
         	"params":{
         		"color_temp": colortemp
         	},
-        	"requestTimeMils": int(round(time.time() * 1000)),
+        	"requestTimeMils": 0,
         }
 
         headers = {
@@ -84,7 +84,7 @@ class L530(PyP100.P100):
         		"hue": hue,
         		"saturation": saturation
         	},
-        	"requestTimeMils": int(round(time.time() * 1000)),
+        	"requestTimeMils": 0,
         }
 
         headers = {

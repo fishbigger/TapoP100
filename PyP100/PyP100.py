@@ -116,7 +116,7 @@ class P100():
 			"method":"handshake",
 			"params":{
 				"key": self.publicKey.decode("utf-8"),
-				"requestTimeMils": int(round(time.time() * 1000))
+				"requestTimeMils": 0
 			}
 		}
 
@@ -141,7 +141,7 @@ class P100():
 				"password": self.encodedPassword,
 				"username": self.encodedEmail
 			},
-			"requestTimeMils": int(round(time.time() * 1000)),
+			"requestTimeMils": 0,
 		}
 		headers = {
 			"Cookie": self.cookie
@@ -174,7 +174,7 @@ class P100():
 			"params":{
 				"device_on": True
 			},
-			"requestTimeMils": int(round(time.time() * 1000)),
+			"requestTimeMils": 0,
 			"terminalUUID": self.terminalUUID
 		}
 
@@ -207,7 +207,7 @@ class P100():
 			"params":{
 				"device_on": False
 			},
-			"requestTimeMils": int(round(time.time() * 1000)),
+			"requestTimeMils": 0,
 			"terminalUUID": self.terminalUUID
 		}
 
@@ -237,7 +237,7 @@ class P100():
 		URL = f"http://{self.ipAddress}/app?token={self.token}"
 		Payload = {
 			"method": "get_device_info",
-			"requestTimeMils": int(round(time.time() * 1000)),
+			"requestTimeMils": 0,
 		}
 
 		headers = {
@@ -259,8 +259,6 @@ class P100():
 		return json.loads(decryptedResponse)
 
 	def getDeviceName(self):
-		self.handshake()
-		self.login()
 		data = self.getDeviceInfo()
 
 		if data["error_code"] != 0:
