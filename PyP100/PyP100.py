@@ -58,16 +58,16 @@ class P100():
 
 		self.errorCodes = ERROR_CODES
 
-		self.encryptCredentials(email, password)
+		self.encryptCredentials()
 		self.createKeyPair()
 
-	def encryptCredentials(self, email, password):
+	def encryptCredentials(self):
 		#Password Encoding
-		self.encodedPassword = tp_link_cipher.TpLinkCipher.mime_encoder(password.encode("utf-8"))
+		self.encodedPassword = b64encode(self.password.encode("UTF-8")).decode("UTF-8")
 
 		#Email Encoding
-		self.encodedEmail = self.sha_digest_username(email)
-		self.encodedEmail = tp_link_cipher.TpLinkCipher.mime_encoder(self.encodedEmail.encode("utf-8"))
+		self.encodedEmail = self.sha_digest_username(self.email)
+		self.encodedEmail = b64encode(self.encodedEmail.encode("utf-8")).decode("UTF-8")
 
 	def createKeyPair(self):
 		self.keys = RSA.generate(1024)
@@ -138,8 +138,8 @@ class P100():
 		Payload = {
 			"method":"login_device",
 			"params":{
-				"username": self.encodedEmail,
-				"password": self.encodedPassword
+				"password": self.encodedPassword,
+				"username": self.encodedEmail
 			},
 			"requestTimeMils": int(round(time.time() * 1000)),
 		}
