@@ -54,19 +54,20 @@ class P100():
 		self.email = email
 		self.password = password
 		self.session = None
+		self.cookie_name = "TP_SESSIONID"
 
 		self.errorCodes = ERROR_CODES
 
-		self.encryptCredentials(email, password)
+		self.encryptCredentials()
 		self.createKeyPair()
 
-	def encryptCredentials(self, email, password):
+	def encryptCredentials(self):
 		#Password Encoding
-		self.encodedPassword = tp_link_cipher.TpLinkCipher.mime_encoder(password.encode("utf-8"))
+		self.encodedPassword = b64encode(self.password.encode("UTF-8")).decode("UTF-8")
 
 		#Email Encoding
-		self.encodedEmail = self.sha_digest_username(email)
-		self.encodedEmail = tp_link_cipher.TpLinkCipher.mime_encoder(self.encodedEmail.encode("utf-8"))
+		self.encodedEmail = self.sha_digest_username(self.email)
+		self.encodedEmail = b64encode(self.encodedEmail.encode("utf-8")).decode("UTF-8")
 
 	def createKeyPair(self):
 		self.keys = RSA.generate(1024)
@@ -115,20 +116,21 @@ class P100():
 			"method":"handshake",
 			"params":{
 				"key": self.publicKey.decode("utf-8"),
-				"requestTimeMils": int(round(time.time() * 1000))
+				"requestTimeMils": 0
 			}
 		}
 		# start new TCP session
 		if self.session:
 			self.session.close()
 		self.session = Session()
+
 		r = self.session.post(URL, json=Payload, timeout=2)
 
 		encryptedKey = r.json()["result"]["key"]
 		self.tpLinkCipher = self.decode_handshake_key(encryptedKey)
 
 		try:
-			self.cookie = r.headers["Set-Cookie"][:-13]
+			self.cookie = f"{self.cookie_name}={r.cookies[self.cookie_name]}"
 
 		except:
 			errorCode = r.json()["error_code"]
@@ -140,10 +142,10 @@ class P100():
 		Payload = {
 			"method":"login_device",
 			"params":{
-				"username": self.encodedEmail,
-				"password": self.encodedPassword
+				"password": self.encodedPassword,
+				"username": self.encodedEmail
 			},
-			"requestTimeMils": int(round(time.time() * 1000)),
+			"requestTimeMils": 0,
 		}
 		headers = {
 			"Cookie": self.cookie
@@ -176,7 +178,7 @@ class P100():
 			"params":{
 				"device_on": True
 			},
-			"requestTimeMils": int(round(time.time() * 1000)),
+			"requestTimeMils": 0,
 			"terminalUUID": self.terminalUUID
 		}
 
@@ -209,7 +211,7 @@ class P100():
 			"params":{
 				"device_on": False
 			},
-			"requestTimeMils": int(round(time.time() * 1000)),
+			"requestTimeMils": 0,
 			"terminalUUID": self.terminalUUID
 		}
 
@@ -239,7 +241,7 @@ class P100():
 		URL = f"http://{self.ipAddress}/app?token={self.token}"
 		Payload = {
 			"method": "get_device_info",
-			"requestTimeMils": int(round(time.time() * 1000)),
+			"requestTimeMils": 0,
 		}
 
 		headers = {
@@ -271,6 +273,13 @@ class P100():
 			encodedName = data["result"]["nickname"]
 			name = b64decode(encodedName)
 			return name.decode("utf-8")
+
+	def toggleState(self):
+		state = self.getDeviceInfo()["result"]["device_on"]
+		if state:
+			self.turnOff()
+		else:
+			self.turnOn()
 
 	def turnOnWithDelay(self, delay):
 		URL = f"http://{self.ipAddress}/app?token={self.token}"

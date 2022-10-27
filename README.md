@@ -1,67 +1,83 @@
-# Tapo P100
-Tapo P100 is a Python library for controlling the Tp-link Tapo P100/P105/P110 plugs and L530/L510E bulbs.
+
+# PyP100
+
+PyP100 is a Python library for controlling many of the TP-Link Tapo devices including the P100, P105, P110 plugs and the L530 and L510E bulbs.
+
+
+## Support
+
+If you would like to support the project, please consider buying me a coffee.
+
+<a href="https://www.buymeacoffee.com/fishbigger" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+
 
 ## Installation
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install PyP100.
+PyP100 can be installed using the package manager [pip](https://pip.pypa.io/en/stable/).
 
 ```bash
-pip3 install PyP100
+  pip install PyP100
 ```
+    
 
 ## Usage
-Plugs - P100, P105 etc.
+
+#### Plugs - P100, P105 etc.
 ```python
 from PyP100 import PyP100
 
-p100 = PyP100.P100("192.168.X.X", "email@gmail.com", "Password123") #Creating a P100 plug object
+p100 = PyP100.P100("192.168.X.X", "email@gmail.com", "Password123") #Creates a P100 plug object
 
 p100.handshake() #Creates the cookies required for further methods
 p100.login() #Sends credentials to the plug and creates AES Key and IV for further methods
 
-p100.turnOn() #Sends the turn on request
-p100.turnOff() #Sends the turn off request
-p100.getDeviceInfo() #Returns dict with all the device info
+p100.turnOn() #Turns the connected plug on
+p100.turnOff() #Turns the connected plug off
+p100.toggleState() #Toggles the state of the connected plug
+
+p100.turnOnWithDelay(10) #Turns the connected plug on after 10 seconds
+p100.turnOffWithDelay(10) #Turns the connected plug off after 10 seconds
+
+p100.getDeviceInfo() #Returns dict with all the device info of the connected plug
+p100.getDeviceName() #Returns the name of the connected plug set in the app
 ```
-Bulbs - L510E, L530 etc.
+
+#### Bulbs - L530, L510E etc.
 ```python
 from PyP100 import PyL530
 
-l530 = PyL530.L530("192.168.X.X", "email@gmail.com", "Password123") #Creating a L530 bulb object
+l530 = PyL530.L530("192.168.X.X", "email@gmail.com", "Password123")
 
 l530.handshake() #Creates the cookies required for further methods
 l530.login() #Sends credentials to the plug and creates AES Key and IV for further methods
 
-#All the bulbs have the PyP100 functions and additionally allows for setting brightness, colour and white temperature
-l530.setBrightness(100) #Sends the set brightness request
-l530.setColorTemp(2700) #Sets the colour temperature to 2700 Kelvin (Warm White)
-l530.setColor(100, 100) #Sends the set colour request
+#All the bulbs have the same basic functions as the plugs and additionally allow for the following functions.
+l530.setBrightness(50) #Sets the brightness of the connected bulb to 50% brightness
+l530.setColorTemp(2700) #Sets the color temperature of the connected bulb to 2700 Kelvin (Warm White)
+l530.setColor(30, 80) #Sets the color of the connected bulb to Hue: 30°, Saturation: 80% (Orange)
 ```
 
-Energy Monitoring - P110
+#### Energy Monitoring - P110
 ```python
 from PyP100 import PyP110
 
-p110 = PyP110.P110("192.168.X.X", "email@gmail.com", "Password123") #Creating a P110 plug object
+p110 = PyP100.P110("192.168.X.X", "email@gmail.com", "Password123")
 
 p110.handshake() #Creates the cookies required for further methods
 p110.login() #Sends credentials to the plug and creates AES Key and IV for further methods
 
-#PyP110 has all PyP100 functions and additionally allows to query energy usage infos
-p110.getEnergyUsage() #Returns dict with all the energy usage
+#The P110 has all the same basic functions as the plugs and additionally allow for energy monitoring.
+p110.getEnergyUsage() #Returns dict with all of the energy usage of the connected plug
 ```
 
 ## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-## Contributers
-[K4CZP3R](https://github.com/K4CZP3R)\
-[Sonic74](https://github.com/sonic74)\
-[shadow00](https://github.com/shadow00)\
-[mochipon](https://github.com/mochipon)\
-[realzoulou](https://github.com/realzoulou)\
-[arrival-spring](https://github.com/arrival-spring)\
-[wlp7s0](https://github.com/wlp7s0)
+Contributions are always welcome!
+
+Please submit a pull request or open an issue for any changes.
+
 
 ## License
+
 [MIT](https://choosealicense.com/licenses/mit/)
+

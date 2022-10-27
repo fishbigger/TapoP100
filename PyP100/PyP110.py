@@ -12,7 +12,7 @@ class P110(PyP100.P100):
         URL = f"http://{self.ipAddress}/app?token={self.token}"
         Payload = {
             "method": "get_energy_usage",
-            "requestTimeMils": int(round(time.time() * 1000)),
+            "requestTimeMils": 0,
         }
 
         headers = {

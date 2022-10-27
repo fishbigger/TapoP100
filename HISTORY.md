@@ -17,3 +17,10 @@ V0.0.16 - Add timeout for all requests\
 V0.0.17 - Both getDeviceInfo and getEnergyUsage now return a json dict \
 V0.0.18 - Added 'import ast' to bulb file \
 V0.0.19 - Bumped up dependencies \
+V0.0.20 - Set device status to 'on' when setting color, color temp or brightness \
+V0.0.21 - Set color temperature to 0 before adjusting color \
+V0.0.22 - Improve parsing of cookie, thus removing trailing ; \
+V0.0.23 - add toggle function to turn on-off the device \
+V0.0.24 - \
+V0.0.25 - Fixed invalid command 'bdist_wheel' \
+V0.1.0 - Fixed majority of -1501 errors, updated README and other small improvements 
