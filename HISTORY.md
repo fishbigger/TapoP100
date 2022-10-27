@@ -22,4 +22,5 @@ V0.0.21 - Set color temperature to 0 before adjusting color \
 V0.0.22 - Improve parsing of cookie, thus removing trailing ; \
 V0.0.23 - add toggle function to turn on-off the device \
 V0.0.24 - \
-V0.0.25 - Fixed invalid command 'bdist_wheel'
+V0.0.25 - Fixed invalid command 'bdist_wheel' \
+V0.1.0 - Fixed majority of -1501 errors, updated README and other small improvements 
