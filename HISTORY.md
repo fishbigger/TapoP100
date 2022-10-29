@@ -25,3 +25,4 @@ V0.0.24 - \
 V0.0.25 - Fixed invalid command 'bdist_wheel' \
 V0.1.0 - Fixed majority of -1501 errors, updated README and other small improvements \
 V0.1.1 - Create new session in Handshake
+V0.1.2 - Better implementation of sessions
