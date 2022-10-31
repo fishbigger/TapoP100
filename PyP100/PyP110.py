@@ -33,3 +33,30 @@ class P110(PyP100.P100):
         decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
 
         return json.loads(decryptedResponse)
+
+    def getEnergyData(self, startT, endT, intervalT):
+        URL = f"http://{self.ipAddress}/app?token={self.token}"
+        Payload = {
+            "method": "get_energy_data",
+            "params":{ "end_timestamp": startT, "interval": intervalT, "start_timestamp": endT},
+            "requestTimeMils": int(round(time.time() * 1000)),
+        }
+
+        headers = {
+            "Cookie": self.cookie
+        }
+
+        EncryptedPayload = self.tpLinkCipher.encrypt(json.dumps(Payload))
+
+        SecurePassthroughPayload = {
+            "method":"securePassthrough",
+            "params":{
+                "request": EncryptedPayload
+            }
+        }
+        _LOGGER.debug("getEnergyUsage %s", self.ipAddress)
+        r = self.session.post(URL, json=SecurePassthroughPayload, headers=headers, timeout=2)
+
+        decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
+
+        return json.loads(decryptedResponse)
