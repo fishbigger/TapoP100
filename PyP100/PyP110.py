@@ -38,7 +38,7 @@ class P110(PyP100.P100):
         URL = f"http://{self.ipAddress}/app?token={self.token}"
         Payload = {
             "method": "get_energy_data",
-            "params":{ "end_timestamp": startT, "interval": intervalT, "start_timestamp": endT},
+            "params":{ "end_timestamp": endT, "interval": intervalT, "start_timestamp": startT},
             "requestTimeMils": int(round(time.time() * 1000)),
         }
 
