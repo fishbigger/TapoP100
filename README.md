@@ -61,7 +61,7 @@ l530.setColor(30, 80) #Sets the color of the connected bulb to Hue: 30°, Satura
 ```python
 from PyP100 import PyP110
 
-p110 = PyP100.P110("192.168.X.X", "email@gmail.com", "Password123")
+p110 = PyP110.P110("192.168.X.X", "email@gmail.com", "Password123")
 
 p110.handshake() #Creates the cookies required for further methods
 p110.login() #Sends credentials to the plug and creates AES Key and IV for further methods
