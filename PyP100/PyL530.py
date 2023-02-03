@@ -14,7 +14,7 @@ class L530(PyP100.P100):
         Payload = {
 			"method": "set_device_info",
 			"params":{
-				"brightness": brightness
+				"brightness": float(brightness)
 			},
 			"requestTimeMils": 0,
 		}
