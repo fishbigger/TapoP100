@@ -23,7 +23,7 @@ def getToken(email, password):
 			"appType": "Tapo_Ios",
 			"cloudUserName": email,
 			"cloudPassword": password,
-			"terminalUUID": "0A950402-7224-46EB-A450-7362CDB902A2"
+			"terminalUUID": str(uuid.uuid4())
 		}
 	}
 
