@@ -4,12 +4,10 @@ from requests import Session
 from base64 import b64encode, b64decode
 import hashlib
 from Crypto.PublicKey import RSA
-import time
 import json
-from Crypto.Cipher import AES, PKCS1_OAEP, PKCS1_v1_5
+from Crypto.Cipher import PKCS1_v1_5
 from . import tp_link_cipher
 import ast
-import pkgutil
 import uuid
 import json
 
@@ -23,7 +21,7 @@ def getToken(email, password):
 			"appType": "Tapo_Ios",
 			"cloudUserName": email,
 			"cloudPassword": password,
-			"terminalUUID": "0A950402-7224-46EB-A450-7362CDB902A2"
+			"terminalUUID": str(uuid.uuid4())
 		}
 	}
 
@@ -275,11 +273,14 @@ class P100():
 			return name.decode("utf-8")
 
 	def toggleState(self):
-		state = self.getDeviceInfo()["result"]["device_on"]
+		state = self.getState()
 		if state:
 			self.turnOff()
 		else:
 			self.turnOn()
+
+	def getState(self):
+		return self.getDeviceInfo()["result"]["device_on"]
 
 	def turnOnWithDelay(self, delay):
 		URL = f"http://{self.ipAddress}/app?token={self.token}"

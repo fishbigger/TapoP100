@@ -2,7 +2,6 @@ from PyP100 import PyP100
 
 import json
 import logging
-import time
 
 _LOGGER = logging.getLogger(__name__)
 
