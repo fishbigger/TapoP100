@@ -262,6 +262,30 @@ class P100():
 
 		return json.loads(decryptedResponse)
 
+	def getCountDownRules(self):
+		URL = f"http://{self.ipAddress}/app?token={self.token}"
+		Payload = {
+			"method": "get_countdown_rules",
+		}
+
+		headers = {
+			"Cookie": self.cookie
+		}
+
+		EncryptedPayload = self.tpLinkCipher.encrypt(json.dumps(Payload))
+
+		SecurePassthroughPayload = {
+			"method":"securePassthrough",
+			"params":{
+				"request": EncryptedPayload
+			}
+		}
+
+		r = self.session.post(URL, json=SecurePassthroughPayload, headers=headers)
+		decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
+
+		return json.loads(decryptedResponse)
+
 	def getDeviceName(self):
 		data = self.getDeviceInfo()
 
