@@ -76,7 +76,7 @@ requests.exceptions.ConnectionError is raised if the IP address is incorrect and
 TapoError is raised when an error code is received from the device,
 for example, if the email and/or password were incorrect.
 
-FailedTapoRequestException bundles both ConnectionError and TapoError together to error catching simpler.
+FailedTapoRequestException bundles both ConnectionError and TapoError together to make catching both errors simpler.
 ```python
 from PyP100 import PyL530, TapoError
 
