@@ -80,7 +80,7 @@ FailedTapoRequestException bundles both ConnectionError and TapoError together t
 ```python
 from PyP100 import PyL530, TapoError
 
-l530 = PyL530.L530("192.168.1.214", "email@gmail.com", "Password123")
+l530 = PyL530.L530("192.168.X.X", "email@gmail.com", "Password123")
 
 try:
     l530.handshake()  # Creates the cookies required for further methods
