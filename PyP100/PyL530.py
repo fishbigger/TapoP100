@@ -1,4 +1,5 @@
 from PyP100 import PyP100
+from PyP100.TapoError import TapoError
 
 import json
 import logging
@@ -39,7 +40,7 @@ class L530(PyP100.P100):
         if ast.literal_eval(decryptedResponse)["error_code"] != 0:
             errorCode = ast.literal_eval(decryptedResponse)["error_code"]
             errorMessage = self.errorCodes[str(errorCode)]
-            raise Exception(f"Error Code: {errorCode}, {errorMessage}")
+            raise TapoError(errorCode, errorMessage)
 
     def setColorTemp(self, colortemp):
         self.turnOn()
@@ -70,8 +71,9 @@ class L530(PyP100.P100):
         decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
 
         if ast.literal_eval(decryptedResponse)["error_code"] != 0:
-        	errorCode = ast.literal_eval(decryptedResponse)["error_code"]
-        	errorMessage = self.errorCodes[str(errorCode)]
+            errorCode = ast.literal_eval(decryptedResponse)["error_code"]
+            errorMessage = self.errorCodes[str(errorCode)]
+            raise TapoError(errorCode, errorMessage)
 
     def setColor(self, hue, saturation):
         self.turnOn()
@@ -105,5 +107,6 @@ class L530(PyP100.P100):
         decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
 
         if ast.literal_eval(decryptedResponse)["error_code"] != 0:
-        	errorCode = ast.literal_eval(decryptedResponse)["error_code"]
-        	errorMessage = self.errorCodes[str(errorCode)]
+            errorCode = ast.literal_eval(decryptedResponse)["error_code"]
+            errorMessage = self.errorCodes[str(errorCode)]
+            raise TapoError(errorCode, errorMessage)

@@ -70,6 +70,28 @@ p110.login() #Sends credentials to the plug and creates AES Key and IV for furth
 p110.getEnergyUsage() #Returns dict with all of the energy usage of the connected plug
 ```
 
+#### Error Handling
+requests.exceptions.ConnectionError is raised if the IP address is incorrect and the device cannot be reached.
+
+TapoError is raised when an error code is received from the device,
+for example, if the email and/or password were incorrect.
+
+FailedTapoRequestException bundles both ConnectionError and TapoError together to error catching simpler.
+```python
+from PyP100 import PyL530, TapoError
+
+l530 = PyL530.L530("192.168.1.214", "email@gmail.com", "Password123")
+
+try:
+    l530.handshake()  # Creates the cookies required for further methods
+    l530.login()  # Sends credentials to the plug and creates AES Key and IV for further methods
+
+    l530.toggleState()
+except TapoError.FailedTapoRequestException as e:
+    # Handle the error somehow
+    print("There was an error: " + str(e))
+```
+
 ## Contributing
 
 Contributions are always welcome!

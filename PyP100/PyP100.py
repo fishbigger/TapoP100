@@ -1,5 +1,6 @@
 import requests
 from requests import Session
+from .TapoError import TapoError
 
 from base64 import b64encode, b64decode
 import hashlib
@@ -135,7 +136,7 @@ class P100():
 		except:
 			errorCode = r.json()["error_code"]
 			errorMessage = self.errorCodes[str(errorCode)]
-			raise Exception(f"Error Code: {errorCode}, {errorMessage}")
+			raise TapoError(errorCode, errorMessage)
 
 	def login(self):
 		URL = f"http://{self.ipAddress}/app"
@@ -169,7 +170,7 @@ class P100():
 		except:
 			errorCode = ast.literal_eval(decryptedResponse)["error_code"]
 			errorMessage = self.errorCodes[str(errorCode)]
-			raise Exception(f"Error Code: {errorCode}, {errorMessage}")
+			raise TapoError(errorCode, errorMessage)
 
 	def turnOn(self):
 		URL = f"http://{self.ipAddress}/app?token={self.token}"
@@ -202,7 +203,7 @@ class P100():
 		if ast.literal_eval(decryptedResponse)["error_code"] != 0:
 			errorCode = ast.literal_eval(decryptedResponse)["error_code"]
 			errorMessage = self.errorCodes[str(errorCode)]
-			raise Exception(f"Error Code: {errorCode}, {errorMessage}")
+			raise TapoError.TapoError(errorCode, errorMessage)
 
 	def turnOff(self):
 		URL = f"http://{self.ipAddress}/app?token={self.token}"
@@ -235,7 +236,7 @@ class P100():
 		if ast.literal_eval(decryptedResponse)["error_code"] != 0:
 			errorCode = ast.literal_eval(decryptedResponse)["error_code"]
 			errorMessage = self.errorCodes[str(errorCode)]
-			raise Exception(f"Error Code: {errorCode}, {errorMessage}")
+			raise TapoError.TapoError(errorCode, errorMessage)
 
 	def getDeviceInfo(self):
 		URL = f"http://{self.ipAddress}/app?token={self.token}"
@@ -260,19 +261,19 @@ class P100():
 		r = self.session.post(URL, json=SecurePassthroughPayload, headers=headers)
 		decryptedResponse = self.tpLinkCipher.decrypt(r.json()["result"]["response"])
 
+		if ast.literal_eval(decryptedResponse)["error_code"] != 0:
+			errorCode = ast.literal_eval(decryptedResponse)["error_code"]
+			errorMessage = self.errorCodes[str(errorCode)]
+			raise TapoError.TapoError(errorCode, errorMessage)
+
 		return json.loads(decryptedResponse)
 
 	def getDeviceName(self):
 		data = self.getDeviceInfo()
 
-		if data["error_code"] != 0:
-			errorCode = ast.literal_eval(decryptedResponse)["error_code"]
-			errorMessage = self.errorCodes[str(errorCode)]
-			raise Exception(f"Error Code: {errorCode}, {errorMessage}")
-		else:
-			encodedName = data["result"]["nickname"]
-			name = b64decode(encodedName)
-			return name.decode("utf-8")
+		encodedName = data["result"]["nickname"]
+		name = b64decode(encodedName)
+		return name.decode("utf-8")
 
 	def toggleState(self):
 		state = self.getDeviceInfo()["result"]["device_on"]
@@ -316,7 +317,7 @@ class P100():
 		if ast.literal_eval(decryptedResponse)["error_code"] != 0:
 			errorCode = ast.literal_eval(decryptedResponse)["error_code"]
 			errorMessage = self.errorCodes[str(errorCode)]
-			raise Exception(f"Error Code: {errorCode}, {errorMessage}")
+			raise TapoError.TapoError(errorCode, errorMessage)
 
 	def turnOffWithDelay(self, delay):
 		URL = f"http://{self.ipAddress}/app?token={self.token}"
@@ -353,4 +354,4 @@ class P100():
 		if ast.literal_eval(decryptedResponse)["error_code"] != 0:
 			errorCode = ast.literal_eval(decryptedResponse)["error_code"]
 			errorMessage = self.errorCodes[str(errorCode)]
-			raise Exception(f"Error Code: {errorCode}, {errorMessage}")
+			raise TapoError.TapoError(errorCode, errorMessage)
